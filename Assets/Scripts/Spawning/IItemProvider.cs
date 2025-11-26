@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using MatchThree.Core;
+using UnityEngine;
 
 namespace MatchThree
 {

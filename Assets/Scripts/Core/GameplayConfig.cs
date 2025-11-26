@@ -1,5 +1,4 @@
-﻿using DefaultNamespace;
-using Match;
+﻿using Match;
 using UnityEngine;
 
 namespace MatchThree

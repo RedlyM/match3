@@ -16,21 +16,20 @@ namespace MatchThree.Board
 
         public void Initialize()
         {
-            _model.Init();
+            _model.Init(_view.transform.position);
             ConfigureBoardSize();
         }
 
         private void ConfigureBoardSize()
         {
             var bounds = _model.Bounds;
+            var offset = _view.transform.position;
 
             var spline = _view.SpriteShape.spline;
-            spline.SetPosition(0, new Vector3(bounds.min.x, bounds.min.y));
-            spline.SetPosition(1, new Vector3(bounds.min.x, bounds.max.y));
-            spline.SetPosition(2, new Vector3(bounds.max.x, bounds.max.y));
-            spline.SetPosition(3, new Vector3(bounds.max.x, bounds.min.y));
+            spline.SetPosition(0, new Vector3(bounds.min.x, bounds.min.y) - offset);
+            spline.SetPosition(1, new Vector3(bounds.min.x, bounds.max.y) - offset);
+            spline.SetPosition(2, new Vector3(bounds.max.x, bounds.max.y) - offset);
+            spline.SetPosition(3, new Vector3(bounds.max.x, bounds.min.y) - offset);
         }
-
-        
     }
 }

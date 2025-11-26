@@ -1,4 +1,4 @@
-﻿namespace MatchThree
+﻿namespace MatchThree.Core
 {
     public interface IObjectIdentifier
     {

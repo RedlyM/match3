@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using DefaultNamespace;
 using MatchThree;
+using MatchThree.Core;
 using UnityEngine;
 using Utils;
 
@@ -43,6 +43,11 @@ namespace Match
             _elements[coord] = element;
         }
 
+        public MatchElement GetElementAtCoord(Vector2Int coord)
+        {
+            return _elements[coord];
+        }
+
         public Vector2Int GetElementCoord(MatchElement element)
         {
             foreach (var pair in _elements)
@@ -54,14 +59,6 @@ namespace Match
             }
 
             throw new Exception("Element not found");
-        }
-
-        public bool CanSwipeToDirection(Vector2Int currentCoord, Vector2Int direction)
-        {
-            var target = currentCoord + direction;
-            var boardSize = _config.BoardSize;
-
-            return target.x >= 0 && target.x < boardSize.x && target.y >= 0 && target.y < boardSize.y;
         }
     }
 }

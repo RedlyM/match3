@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
+using DG.Tweening;
 using MatchThree;
 using MatchThree.Board;
+using MatchThree.Core;
 using UnityEngine;
 using VContainer.Unity;
 
@@ -35,19 +37,20 @@ namespace Match
             SpawnCycleAsync(firstSpawnIdentifiers, CancellationToken.None).Forget();
         }
 
-        private async UniTask SpawnCycleAsync(IReadOnlyDictionary<Vector2Int, IObjectIdentifier> elements, CancellationToken token)
+        private async UniTask SpawnCycleAsync(IReadOnlyDictionary<Vector2Int, IObjectIdentifier> elements,
+            CancellationToken token)
         {
             foreach (var pair in elements)
             {
                 var item = await _pool.GetAsync(pair.Value, token);
-                var itemPosition = _boardModel.GetPosition(pair.Key) + (Vector2)_view.SpawnParent.position;
+                var itemPosition = _boardModel.GetPosition(pair.Key);
 
                 item.transform.SetParent(_view.SpawnParent);
                 item.transform.position = itemPosition;
 
                 var movable = item.Movable;
 
-                Action<Vector2Int> handler = v => MoveElement(item, v);
+                Action<Vector2Int> handler = v => MoveElementAsync(item, v, token).Forget();
                 movable.SwipeDetected += handler;
 
                 _swipeHandlers[movable] = handler;
@@ -55,25 +58,36 @@ namespace Match
             }
         }
 
-        private void MoveElement(MatchElement element, Vector2Int direction)
+        private async UniTask MoveElementAsync(MatchElement element, Vector2Int direction, CancellationToken token)
         {
+            //нужно, чтобы Y координата совпадала с координатами сетки
             direction.y = -direction.y;
             element.Movable.Blocked = true;
             var current = _model.GetElementCoord(element);
+            var targetCoord = current + direction;
 
-            if (_model.CanSwipeToDirection(current, direction))
+            element.Animations.PlayPunchAnimationAsync(token).Forget();
+
+            if (_boardModel.IsMovableCoord(targetCoord))
             {
-                Vector2 targetPos = _boardModel.GetPosition(current + direction) + (Vector2)_view.SpawnParent.position;
-                element.Movable.MoveAsync(targetPos, CancellationToken.None).Forget();
-                Debug.Log($"Move {element.Identifier.Id} from {current} to {targetPos}. Direction: {direction}");
-            }
-            else
-            {
-                Debug.Log($"Can't move {element.Identifier.Id} from {current}. Direction: {direction}");
+                var targetElement = _model.GetElementAtCoord(targetCoord);
+                targetElement.Animations.PlayPunchAnimationAsync(token).Forget();
+
+                Vector2 targetPos = _boardModel.GetPosition(targetCoord);
+                Vector2 oldPos = _boardModel.GetPosition(current);
+                var moveCurrentOp = element.Movable.MoveAsync(targetPos, token);
+                var moveTargetOp = targetElement.Movable.MoveAsync(oldPos, token);
+
+                await UniTask.WhenAll(moveCurrentOp, moveTargetOp);
+
+                var moveCurrentBackOp = element.Movable.MoveAsync(oldPos, token);
+                var moveTargetBackOp = targetElement.Movable.MoveAsync(targetPos, token);
+
+                await UniTask.WhenAll(moveCurrentBackOp, moveTargetBackOp);
             }
         }
 
-        public void UnsubscribeAllSwipes()
+        private void UnsubscribeAllSwipes()
         {
             foreach (var kvp in _swipeHandlers)
             {
@@ -82,6 +96,5 @@ namespace Match
 
             _swipeHandlers.Clear();
         }
-
     }
 }

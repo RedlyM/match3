@@ -1,5 +1,6 @@
-﻿using DefaultNamespace;
+﻿using Element;
 using MatchThree;
+using MatchThree.Core;
 using UnityEngine;
 
 namespace Match
@@ -10,11 +11,16 @@ namespace Match
 
         public Movable Movable => _movable;
 
+        public ElementAnimations Animations => _animations;
+
         [SerializeField]
         private Identifier _identifier;
 
         [SerializeField]
         private Movable _movable;
+
+        [SerializeField]
+        private ElementAnimations _animations;
 
         private void OnValidate()
         {

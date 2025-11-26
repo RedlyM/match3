@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using DefaultNamespace;
 using Match;
+using MatchThree.Core;
 
 namespace MatchThree
 {

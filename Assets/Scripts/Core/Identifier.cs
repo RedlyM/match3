@@ -1,7 +1,7 @@
 ﻿using MatchThree;
 using UnityEngine;
 
-namespace DefaultNamespace
+namespace MatchThree.Core
 {
     [System.Serializable]
     public class Identifier : IObjectIdentifier

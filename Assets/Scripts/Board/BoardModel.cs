@@ -9,8 +9,6 @@ namespace MatchThree.Board
 
         public Bounds Bounds { get; private set; }
 
-        public IReadOnlyDictionary<Vector2Int, Vector2> CoordPositions => _coordPositions;
-
         private Dictionary<Vector2Int, Vector2> _coordPositions;
 
         public BoardModel(GameplayConfig config)
@@ -18,15 +16,20 @@ namespace MatchThree.Board
             _config = config;
         }
 
-        public void Init()
+        public void Init(Vector2 boardOffset)
         {
-            InitBounds();
+            InitBounds(boardOffset);
             InitCoords();
         }
 
         public Vector2 GetPosition(Vector2Int coord)
         {
             return _coordPositions[coord];
+        }
+
+        public bool IsMovableCoord(Vector2Int coord)
+        {
+            return _coordPositions.ContainsKey(coord);
         }
 
         private void InitCoords()
@@ -40,15 +43,21 @@ namespace MatchThree.Board
                     var posX = Bounds.min.x + _config.ElementSize.x * i + _config.ElementSize.x * 0.5f;
                     var posY = Bounds.max.y - _config.ElementSize.y * j - _config.ElementSize.y * 0.5f;
                     _coordPositions[new Vector2Int(i, j)] = new Vector2(posX, posY);
+
+                    var obj = new GameObject();
+                    var sprite = obj.AddComponent<SpriteRenderer>();
+                    sprite.color = Color.magenta;
+                    sprite.sortingOrder = 5;
+                    obj.transform.position = new Vector2(posX, posY);
                 }
             }
         }
 
-        private void InitBounds()
+        private void InitBounds(Vector2 center)
         {
             var fullSize = new Vector2(_config.BoardSize.x * _config.ElementSize.x, _config.BoardSize.y * _config.ElementSize.y);
 
-            Bounds = new Bounds(Vector3.zero, fullSize);
+            Bounds = new Bounds(center, fullSize);
         }
     }
 }
