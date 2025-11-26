@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a2a3c370f5f49ea9458e51cb70c9f7e, type: 3}
+  m_Name: GameplayConfig
+  m_EditorClassIdentifier: 
+  _boardSize: {x: 8, y: 6}
+  _elementSize: {x: 1, y: 1}
+  _fruits:
+  - {fileID: 8933961075701727070, guid: dcfa150433e47994ebf8b1bc2346b4f9, type: 3}
+  - {fileID: 6343077132017274118, guid: 1f9bc2baa3eecbe48aaac571067bd966, type: 3}
+  - {fileID: 5577991854701718080, guid: 1977995712407c04a9f16047a8d9552e, type: 3}
+  - {fileID: 5292465679364099453, guid: e604a0a06f0ad2f4588b7a1127b77381, type: 3}
+  - {fileID: 4675218547413780613, guid: b06ad6d962700de40a25e00ccd3b09c8, type: 3}
+  - {fileID: 4719320689157789516, guid: fe78d4afa3f68664fa71adf376f4aea6, type: 3}
+  - {fileID: 2486490898486262449, guid: 06e4910d9238ddb418ce390133ed7724, type: 3}
