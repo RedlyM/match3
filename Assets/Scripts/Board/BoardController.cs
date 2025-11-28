@@ -20,6 +20,7 @@ namespace MatchThree.Board
         {
             _model.Init(_view.transform.position);
             ConfigureBoardSize();
+            PlaceMask();
         }
 
         private void ConfigureBoardSize()
@@ -32,6 +33,12 @@ namespace MatchThree.Board
             spline.SetPosition(1, new Vector3(bounds.min.x, bounds.max.y) - offset);
             spline.SetPosition(2, new Vector3(bounds.max.x, bounds.max.y) - offset);
             spline.SetPosition(3, new Vector3(bounds.max.x, bounds.min.y) - offset);
+        }
+
+        private void PlaceMask()
+        {
+            float posY = _model.Bounds.max.y + _view.Mask.localScale.y * 0.5f;
+            _view.Mask.position = new Vector2(_view.Mask.position.x, posY);
         }
     }
 }
