@@ -1,7 +1,9 @@
 ﻿using System.Threading;
+
+using UnityEngine;
+
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
-using UnityEngine;
 
 namespace MatchThree.Element
 {

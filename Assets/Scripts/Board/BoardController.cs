@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using MatchThree.Core;
+using UnityEngine;
 using UnityEngine.U2D;
 
 using VContainer.Unity;
@@ -9,16 +10,20 @@ namespace MatchThree.Board
     {
         private readonly BoardView _view;
         private readonly BoardModel _model;
+        private readonly GameplayConfig _config;
+        private readonly Settings _settings;
 
-        public BoardController(BoardView view, BoardModel model)
+        public BoardController(BoardView view, BoardModel model, GameplayConfig config, Settings settings)
         {
             _view = view;
             _model = model;
+            _config = config;
+            _settings = settings;
         }
 
         public void Initialize()
         {
-            _model.Init(_view.transform.position);
+            _model.Init(_settings.GridSize, _config.ElementSize,_view.transform.position);
             ConfigureBoardSize();
             PlaceMask();
         }

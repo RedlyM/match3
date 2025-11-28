@@ -6,19 +6,17 @@ namespace MatchThree.Board
 {
     public class BoardModel
     {
-        private readonly GameplayConfig _config;
-
         public Bounds Bounds { get; private set; }
 
         private Vector2[,] _coordPositions;
+        private Vector2Int _gridSize;
+        private Vector2 _elementSize;
 
-        public BoardModel(GameplayConfig config)
+        public void Init(Vector2Int gridSize, Vector2 elementSize, Vector2 boardOffset)
         {
-            _config = config;
-        }
+            _gridSize = gridSize;
+            _elementSize = elementSize;
 
-        public void Init(Vector2 boardOffset)
-        {
             InitBounds(boardOffset);
             InitCoords();
         }
@@ -32,7 +30,7 @@ namespace MatchThree.Board
         {
             Vector2 original = GetPosition(coord);
             Vector2 higherElementPosition = _coordPositions[coord.x, 0];
-            original.y = higherElementPosition.y + _config.ElementSize.y * step;
+            original.y = higherElementPosition.y + _elementSize.y * step;
             return original;
         }
 
@@ -46,16 +44,16 @@ namespace MatchThree.Board
 
         private void InitCoords()
         {
-            int width = _config.BoardSize.x;
-            int height = _config.BoardSize.y;
+            int width = _gridSize.x;
+            int height = _gridSize.y;
             _coordPositions = new Vector2[width, height];
 
             for (int x = 0; x < width; x++)
             {
                 for (int y = 0; y < height; y++)
                 {
-                    float posX = Bounds.min.x + _config.ElementSize.x * x + _config.ElementSize.x * 0.5f;
-                    float posY = Bounds.max.y - _config.ElementSize.y * y - _config.ElementSize.y * 0.5f;
+                    float posX = Bounds.min.x + _elementSize.x * x + _elementSize.x * 0.5f;
+                    float posY = Bounds.max.y - _elementSize.y * y - _elementSize.y * 0.5f;
                     _coordPositions[x, y] = new Vector2(posX, posY);
                 }
             }
@@ -63,8 +61,7 @@ namespace MatchThree.Board
 
         private void InitBounds(Vector2 center)
         {
-            Vector2 fullSize = new Vector2(_config.BoardSize.x * _config.ElementSize.x,
-                _config.BoardSize.y * _config.ElementSize.y);
+            Vector2 fullSize = new Vector2(_gridSize.x * _elementSize.x, _gridSize.y * _elementSize.y);
 
             Bounds = new Bounds(center, fullSize);
         }

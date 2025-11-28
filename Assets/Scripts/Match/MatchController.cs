@@ -1,16 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 
 using UnityEngine;
 
 using VContainer.Unity;
 using Cysharp.Threading.Tasks;
-
+using Events;
 using MatchThree.Board;
 using MatchThree.Core;
 using MatchThree.Element;
 using MatchThree.Spawning;
+using MatchThree.UI;
+using MatchThree.Utils;
 
 namespace MatchThree.Match
 {
@@ -20,25 +23,36 @@ namespace MatchThree.Match
         private readonly MatchModel _model;
 
         private readonly BoardModel _boardModel;
+        private readonly GameplayConfig _config;
         private readonly PoolWithFactory<MatchElement> _pool;
+        private readonly IEventBus _eventBus;
+        private readonly Settings _settings;
+        private readonly LoadingScreen _loadingScreen;
 
         private CancellationTokenSource _lifetimeCts;
         private Dictionary<UserInput, Action<Vector2Int>> _swipeHandlers;
         private bool _inputsBlocked;
 
-        public MatchController(MatchView view, MatchModel model, BoardModel boardModel,
-            PoolWithFactory<MatchElement> pool)
+        public MatchController(MatchView view, MatchModel model, BoardModel boardModel, GameplayConfig config,
+            PoolWithFactory<MatchElement> pool, IEventBus eventBus, Settings settings, LoadingScreen loadingScreen)
         {
             _view = view;
             _model = model;
             _boardModel = boardModel;
+            _config = config;
             _pool = pool;
+            _eventBus = eventBus;
+            _settings = settings;
+            _loadingScreen = loadingScreen;
         }
 
         void IInitializable.Initialize()
         {
+            var identifiers = _config.Elements
+                .Select(element => new Identifier(element.Id) as IObjectIdentifier)
+                .ToList();
             _lifetimeCts = new CancellationTokenSource();
-            _model.Init();
+            _model.Init(_settings.GridSize, identifiers);
             _swipeHandlers = new Dictionary<UserInput, Action<Vector2Int>>();
             var firstSpawnIdentifiers = _model.GetItemsForSpawn();
             SpawnCycleAsync(firstSpawnIdentifiers, _lifetimeCts.Token).Forget();
@@ -55,6 +69,8 @@ namespace MatchThree.Match
             _inputsBlocked = true;
 
             await SpawnAsync(identifiers, token);
+
+            _loadingScreen.Hide();
 
             while (await CollectAllMatchesAsync(token))
             {
@@ -187,10 +203,13 @@ namespace MatchThree.Match
 
             List<(MatchElement, Vector2Int)> matchedElements = new List<(MatchElement, Vector2Int)>();
             List<UniTask> ops = new List<UniTask>();
+            int matchCount = matches.Count;
+            int matchLength = 0;
 
             foreach (var match in matches)
             {
                 Vector2Int coord = match.Begin;
+                matchLength += match.Length;
 
                 for (int i = 0; i < match.Length; i++)
                 {
@@ -202,6 +221,8 @@ namespace MatchThree.Match
             }
 
             await UniTask.WhenAll(ops);
+
+            _eventBus.Publish(new MatchEvent(matchCount, matchLength));
 
             foreach (var tuple in matchedElements)
             {

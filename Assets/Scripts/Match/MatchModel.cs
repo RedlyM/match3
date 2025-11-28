@@ -12,29 +12,20 @@ namespace MatchThree.Match
 {
     public class MatchModel
     {
-        private readonly GameplayConfig _config;
-
         private MatchElement[,] _elements;
-        private List<IObjectIdentifier> _identifiers;
+        private IReadOnlyList<IObjectIdentifier> _identifiers;
 
-        public MatchModel(GameplayConfig config)
+        public void Init(Vector2Int gridSize, IReadOnlyList<IObjectIdentifier> identifiers)
         {
-            _config = config;
-        }
-
-        public void Init()
-        {
-            _elements = new MatchElement[_config.BoardSize.x, _config.BoardSize.y];
-            _identifiers = _config.Elements
-                .Select(element => new Identifier(element.Id) as IObjectIdentifier)
-                .ToList();
+            _identifiers = identifiers;
+            _elements = new MatchElement[gridSize.x, gridSize.y];
         }
 
         public IObjectIdentifier[,] GetItemsForSpawn()
         {
-            IObjectIdentifier[,] grid = new IObjectIdentifier[_config.BoardSize.x, _config.BoardSize.y];
-            int width = grid.GetLength(0);
-            int height = grid.GetLength(1);
+            int width = _elements.GetLength(0);
+            int height = _elements.GetLength(1);
+            IObjectIdentifier[,] grid = new IObjectIdentifier[width, height];
 
             for (int i = 0; i < width; i++)
             {
@@ -163,11 +154,13 @@ namespace MatchThree.Match
         /// <returns>List of changed coords</returns>
         public List<Vector2Int> ActualizeElements()
         {
+            int width = _elements.GetLength(0);
+            int height = _elements.GetLength(1);
             var changedElements = new List<Vector2Int>();
 
-            for (int x = 0; x < _config.BoardSize.x; x++)
+            for (int x = 0; x < width; x++)
             {
-                for (int y = _config.BoardSize.y - 1; y >= 0; y--)
+                for (int y = height - 1; y >= 0; y--)
                 {
                     var pos = new Vector2Int(x, y);
                     var elem = GetElementAtCoord(pos);
