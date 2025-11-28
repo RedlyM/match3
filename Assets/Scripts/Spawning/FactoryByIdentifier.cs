@@ -1,10 +1,14 @@
 ﻿using System.Threading;
-using Cysharp.Threading.Tasks;
-using MatchThree.Core;
+
 using UnityEngine;
+
+using Cysharp.Threading.Tasks;
+
+using MatchThree.Core;
+
 using Object = UnityEngine.Object;
 
-namespace MatchThree
+namespace MatchThree.Spawning
 {
     public class FactoryByIdentifier<T> where T : MonoBehaviour
     {

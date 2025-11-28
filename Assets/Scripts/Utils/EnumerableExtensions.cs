@@ -1,9 +1,9 @@
-﻿namespace Utils
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
+namespace MatchThree.Utils
+{
     public static class EnumerableExtensions
     {
         private static readonly Random _random = new Random();

@@ -1,10 +1,11 @@
 ﻿using UnityEngine;
 
-namespace Match
+namespace MatchThree.Match
 {
     public class MatchView : MonoBehaviour
     {
-        [SerializeField] private Transform _spawnParent;
+        [SerializeField]
+        private Transform _spawnParent;
 
         public Transform SpawnParent => _spawnParent;
     }

@@ -1,4 +1,6 @@
 ﻿using UnityEngine;
+using UnityEngine.U2D;
+
 using VContainer.Unity;
 
 namespace MatchThree.Board
@@ -22,10 +24,10 @@ namespace MatchThree.Board
 
         private void ConfigureBoardSize()
         {
-            var bounds = _model.Bounds;
-            var offset = _view.transform.position;
+            Bounds bounds = _model.Bounds;
+            Vector3 offset = _view.transform.position;
 
-            var spline = _view.SpriteShape.spline;
+            Spline spline = _view.SpriteShape.spline;
             spline.SetPosition(0, new Vector3(bounds.min.x, bounds.min.y) - offset);
             spline.SetPosition(1, new Vector3(bounds.min.x, bounds.max.y) - offset);
             spline.SetPosition(2, new Vector3(bounds.max.x, bounds.max.y) - offset);

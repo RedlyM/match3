@@ -1,13 +1,16 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using Cysharp.Threading.Tasks;
-using MatchThree.Core;
+
 using UnityEngine;
 
-namespace MatchThree
+using Cysharp.Threading.Tasks;
+
+using MatchThree.Core;
+
+namespace MatchThree.Spawning
 {
-    public class PoolWithFactory<T> where T : MonoBehaviour
+    public class PoolWithFactory<T> where T : MonoBehaviour, IObjectIdentifier, IPoolable
     {
         private readonly FactoryByIdentifier<T> _factoryByIdentifier;
         private readonly List<T> _pool;
@@ -22,26 +25,24 @@ namespace MatchThree
 
         public async UniTask<T> GetAsync(IObjectIdentifier id, CancellationToken token)
         {
-            T result;
+            T item = _pool.FirstOrDefault(item => item.Id.Equals(id.Id) && !_busy.Contains(item));
 
-            if (_pool.Count == _busy.Count)
+            if (item == null)
             {
-                result = await _factoryByIdentifier.CreateAsync(id, token);
-            }
-            else
-            {
-                result = _pool.First(item => !_busy.Contains(item));
+                item = await _factoryByIdentifier.CreateAsync(id, token);
+                _pool.Add(item);
             }
 
-            _pool.Add(result);
-            _busy.Add(result);
+            _busy.Add(item);
 
-            return result;
+            item.Prepare();
+            return item;
         }
 
         public void ReturnToPool(T item)
         {
             _busy.Remove(item);
+            item.Release();
         }
     }
 }

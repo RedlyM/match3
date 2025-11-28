@@ -1,22 +1,32 @@
-﻿using Match;
-using MatchThree.Board;
-using UnityEngine;
+﻿using UnityEngine;
 using VContainer;
+
 using VContainer.Unity;
+
+using MatchThree.Board;
+using MatchThree.Core;
+using MatchThree.Element;
+using MatchThree.Match;
+using MatchThree.Spawning;
 
 namespace MatchThree
 {
     public class GameplayLifetimeScope : LifetimeScope
     {
-        [SerializeField] private GameplayConfig _config;
-        [SerializeField] private BoardView _boardView;
-        [SerializeField] private MatchView _matchView;
+        [SerializeField]
+        private GameplayConfig _config;
+
+        [SerializeField]
+        private BoardView _boardView;
+
+        [SerializeField]
+        private MatchView _matchView;
 
         protected override void Configure(IContainerBuilder builder)
         {
-            var itemProvider = new ItemProvider(_config.Elements);
-            var factory = new FactoryByIdentifier<MatchElement>(itemProvider);
-            var pool = new PoolWithFactory<MatchElement>(factory);
+            ItemProvider itemProvider = new ItemProvider(_config.Elements);
+            FactoryByIdentifier<MatchElement> factory = new FactoryByIdentifier<MatchElement>(itemProvider);
+            PoolWithFactory<MatchElement> pool = new PoolWithFactory<MatchElement>(factory);
 
             builder.RegisterInstance(pool);
 

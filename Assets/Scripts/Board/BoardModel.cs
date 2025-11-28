@@ -1,5 +1,6 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+
+using MatchThree.Core;
 
 namespace MatchThree.Board
 {
@@ -9,7 +10,7 @@ namespace MatchThree.Board
 
         public Bounds Bounds { get; private set; }
 
-        private Dictionary<Vector2Int, Vector2> _coordPositions;
+        private Vector2[,] _coordPositions;
 
         public BoardModel(GameplayConfig config)
         {
@@ -24,38 +25,46 @@ namespace MatchThree.Board
 
         public Vector2 GetPosition(Vector2Int coord)
         {
-            return _coordPositions[coord];
+            return _coordPositions[coord.x, coord.y];
+        }
+
+        public Vector2 GetOuterPosition(Vector2Int coord, int step)
+        {
+            Vector2 original = GetPosition(coord);
+            Vector2 higherElementPosition = _coordPositions[coord.x, 0];
+            original.y = higherElementPosition.y + _config.ElementSize.y * step;
+            return original;
         }
 
         public bool IsMovableCoord(Vector2Int coord)
         {
-            return _coordPositions.ContainsKey(coord);
+            return coord.x >= 0 &&
+                   coord.y >= 0 &&
+                   coord.x < _coordPositions.GetLength(0) &&
+                   coord.y < _coordPositions.GetLength(1);
         }
 
         private void InitCoords()
         {
-            _coordPositions = new Dictionary<Vector2Int, Vector2>();
+            int width = _config.BoardSize.x;
+            int height = _config.BoardSize.y;
+            _coordPositions = new Vector2[width, height];
 
-            for (int i = 0; i < _config.BoardSize.x; i++)
+            for (int x = 0; x < width; x++)
             {
-                for (int j = 0; j < _config.BoardSize.y; j++)
+                for (int y = 0; y < height; y++)
                 {
-                    var posX = Bounds.min.x + _config.ElementSize.x * i + _config.ElementSize.x * 0.5f;
-                    var posY = Bounds.max.y - _config.ElementSize.y * j - _config.ElementSize.y * 0.5f;
-                    _coordPositions[new Vector2Int(i, j)] = new Vector2(posX, posY);
-
-                    var obj = new GameObject();
-                    var sprite = obj.AddComponent<SpriteRenderer>();
-                    sprite.color = Color.magenta;
-                    sprite.sortingOrder = 5;
-                    obj.transform.position = new Vector2(posX, posY);
+                    float posX = Bounds.min.x + _config.ElementSize.x * x + _config.ElementSize.x * 0.5f;
+                    float posY = Bounds.max.y - _config.ElementSize.y * y - _config.ElementSize.y * 0.5f;
+                    _coordPositions[x, y] = new Vector2(posX, posY);
                 }
             }
         }
 
         private void InitBounds(Vector2 center)
         {
-            var fullSize = new Vector2(_config.BoardSize.x * _config.ElementSize.x, _config.BoardSize.y * _config.ElementSize.y);
+            Vector2 fullSize = new Vector2(_config.BoardSize.x * _config.ElementSize.x,
+                _config.BoardSize.y * _config.ElementSize.y);
 
             Bounds = new Bounds(center, fullSize);
         }

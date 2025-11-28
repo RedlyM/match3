@@ -1,15 +1,17 @@
-﻿using Element;
-using MatchThree;
+﻿using UnityEngine;
+
 using MatchThree.Core;
-using UnityEngine;
+using MatchThree.Spawning;
 
-namespace Match
+namespace MatchThree.Element
 {
-    public class MatchElement : MonoBehaviour
+    public class MatchElement : MonoBehaviour, IObjectIdentifier, IPoolable
     {
-        public IObjectIdentifier Identifier => _identifier;
+        public string Id => _identifier.Id;
 
-        public Movable Movable => _movable;
+        public UserInput UserInput => _userInput;
+
+        public ElementMovement Movement => _movement;
 
         public ElementAnimations Animations => _animations;
 
@@ -17,7 +19,10 @@ namespace Match
         private Identifier _identifier;
 
         [SerializeField]
-        private Movable _movable;
+        private UserInput _userInput;
+
+        [SerializeField]
+        private ElementMovement _movement;
 
         [SerializeField]
         private ElementAnimations _animations;
@@ -28,6 +33,18 @@ namespace Match
             {
                 _identifier = new Identifier(name);
             }
+        }
+
+        public void Prepare()
+        {
+            _animations.ResetToDefault();
+            gameObject.SetActive(true);
+        }
+
+        public void Release()
+        {
+            gameObject.SetActive(false);
+            transform.position = Vector3.up * 10f;
         }
     }
 }

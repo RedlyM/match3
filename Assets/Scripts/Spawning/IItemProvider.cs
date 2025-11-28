@@ -1,7 +1,8 @@
-﻿using MatchThree.Core;
-using UnityEngine;
+﻿using UnityEngine;
 
-namespace MatchThree
+using MatchThree.Core;
+
+namespace MatchThree.Spawning
 {
     public interface IItemProvider<out T> where T : MonoBehaviour
     {

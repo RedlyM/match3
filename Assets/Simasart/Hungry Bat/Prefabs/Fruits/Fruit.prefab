@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 1393836645415585426}
   - component: {fileID: 4204855345291153014}
   - component: {fileID: 1467550289544273506}
+  - component: {fileID: 18934870851370545}
   - component: {fileID: 3126698437761131571}
   - component: {fileID: 7965184287327163690}
   m_Layer: 0
@@ -95,8 +96,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _identifier:
     _id: Fruit
-  _movable: {fileID: 3126698437761131571}
+  _userInput: {fileID: 3126698437761131571}
+  _movement: {fileID: 18934870851370545}
   _animations: {fileID: 7965184287327163690}
+--- !u!114 &18934870851370545
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1393836645415585421}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7424816f886a42eebdafb37411bb70f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _target: {fileID: 1393836645415585426}
+  _timePerStep: 0.2
 --- !u!114 &3126698437761131571
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -173,6 +189,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _target: {fileID: 1393836646070208607}
+  _defaultScale: {x: 0.5, y: 0.5, z: 1}
   _punchScale: {x: 0.1, y: 0.1}
   _punchDuration: 0.4
 --- !u!1 &1393836646070208601

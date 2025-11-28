@@ -1,14 +1,20 @@
-﻿using Match;
-using UnityEngine;
+﻿using UnityEngine;
 
-namespace MatchThree
+using MatchThree.Element;
+
+namespace MatchThree.Core
 {
     [CreateAssetMenu(fileName = "GameplayConfig", menuName = "MatchThree/GameplayConfig")]
     public class GameplayConfig : ScriptableObject
     {
-        [SerializeField] private Vector2Int _boardSize;
-        [SerializeField] private Vector2 _elementSize;
-        [SerializeField] private MatchElement[] _fruits;
+        [SerializeField]
+        private Vector2Int _boardSize;
+
+        [SerializeField]
+        private Vector2 _elementSize;
+
+        [SerializeField]
+        private MatchElement[] _fruits;
 
         public Vector2Int BoardSize => _boardSize;
 

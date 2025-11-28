@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
-using Match;
-using MatchThree.Core;
 
-namespace MatchThree
+using MatchThree.Core;
+using MatchThree.Element;
+
+namespace MatchThree.Spawning
 {
     public class ItemProvider : IItemProvider<MatchElement>
     {
@@ -19,7 +20,7 @@ namespace MatchThree
 
             foreach (var item in _fruits)
             {
-                if (item.Identifier.Id.Equals(target.Id))
+                if (item.Id.Equals(target.Id))
                 {
                     result = item;
                     break;

@@ -1,5 +1,4 @@
-﻿using MatchThree;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace MatchThree.Core
 {
@@ -8,7 +7,8 @@ namespace MatchThree.Core
     {
         public string Id => _id;
 
-        [SerializeField] private string _id;
+        [SerializeField]
+        private string _id;
 
         public Identifier(string id)
         {
