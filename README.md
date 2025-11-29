@@ -4,7 +4,7 @@
 
 🎥 Gameplay
 
-(no gif yet)
+[Play (WebGl)](https://redly-m.itch.io/fruit-match)
 
 ## 📋 Task Summary
 
